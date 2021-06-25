@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
   
   if(req.query.title){
     console.log(req.query.title)
-    const filteredName = movies.filter((obj)=>obj.title.toLowerCase().includes(req.query.title)
+    const filteredName = movies.filter((obj)=>obj.title.includes(req.query.title)
     ); 
     res.send(filteredName)
   }
@@ -36,13 +36,19 @@ router.get('/:id', function(req, res, next) {
   }
 });
 
-/* router.get('/?title={titleQuery}', function(req,res){
-if(req.query.titleQuery){
-  const filteredName = movies.filter((obj)=>obj.name.includes(req.query.titleQuery)
-  );
-  res.send(filteredName)
-}
-
-}) */
+router.post('/', function (req, res, next) {
+  let newMovies = movies;
+  req.body.id = newMovies.length+1
+  newMovies.push(req.body)
+  newMovies=JSON.stringify(newMovies)
+  console.log(newMovies)
+  fs.writeFile('../mock-data/movies.json', newMovies, (err) => {
+    if(err){
+      throw(err)
+    }
+  })
+  res.json("POST Request Called")
+  /* POST user data using the request body */
+})
 
 module.exports = router;
